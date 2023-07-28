@@ -49,7 +49,7 @@ import { slideAndFadeAnimation } from '../../animations/slide-and-fade.animation
        useAnimation(slideAndFadeAnimation,{
         params:{
           time:'1000ms',
-          startColor:'rgb(201,157,242)'
+          startColor:'rgb(201,157,241)'
         }
        }),
         group([

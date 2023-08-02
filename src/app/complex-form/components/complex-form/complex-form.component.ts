@@ -74,7 +74,7 @@ initFormObservables() {
       this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
         startWith(this.contactPreferenceCtrl.value), 
         map(preference => preference === 'phone'),
-        tap(showPhoneCtrl =>this.setPhonevalidators(showPhoneCtrl))
+        tap(showPhoneCtrl => this.setPhonevalidators(showPhoneCtrl))
         );
   }
 
@@ -86,7 +86,8 @@ private setEmailValidators(showEmailCtrl: boolean){
       this.emailCtrl.clearValidators();
       this.confirmEmailCtrl.clearValidators();
 }
-this.phoneCtrl.updateValueAndValidity();
+this.emailCtrl.updateValueAndValidity();
+this.confirmEmailCtrl.updateValueAndValidity();
   }
 
 private setPhonevalidators(showPhoneCtrl: boolean){
@@ -97,6 +98,8 @@ private setPhonevalidators(showPhoneCtrl: boolean){
 }
 this.phoneCtrl.updateValueAndValidity();
   }
+
+
 onSubmitForm() {
   console.log(this.mainForm.value);
 }

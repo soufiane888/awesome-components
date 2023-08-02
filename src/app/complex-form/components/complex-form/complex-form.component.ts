@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map, Observable, startWith, tap } from 'rxjs';
 import { ComplexFormService } from '../../services/complex-form.service';
+import {  confirmEqualValidator } from '../../validators/confirm-equal.validator';
+
 
 
 @Component({
@@ -24,6 +26,8 @@ export class ComplexFormComponent implements OnInit {
   loginInfoForm!: FormGroup;
   showEmailCtrl$!: Observable<boolean>;
   showPhoneCtrl$!: Observable<boolean>;
+  showEmailError$!: Observable<boolean>;
+  showPasswordError$!: Observable<boolean>;
 
   constructor(private formBuilder: FormBuilder,
     private complexFormService: ComplexFormService) { }
@@ -56,6 +60,9 @@ private  initFormControls(): void{
   this.emailForm = this.formBuilder.group({
     email: this.emailCtrl,
     confirm: this.confirmEmailCtrl
+  },{
+    validators: [confirmEqualValidator('email', 'confirm')],
+    updateOn: 'blur'
   })
   this.phoneCtrl = this.formBuilder.control('');
   this.passwordCtrl = this.formBuilder.control('', Validators.required);
@@ -64,6 +71,9 @@ private  initFormControls(): void{
     username: ['', Validators.required],
     password: this.passwordCtrl,
     confirmPassword: this.confirmPasswordCtrl
+  },{
+    validators: [confirmEqualValidator('password', 'confirmPassword')],
+    updateOn: 'blur'
   })
 
 }  
@@ -74,11 +84,17 @@ initFormObservables() {
      tap(showEmailCtrl =>this.setEmailValidators(showEmailCtrl))
     );
 
-      this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
+    this.showPhoneCtrl$ = this.contactPreferenceCtrl.valueChanges.pipe(
         startWith(this.contactPreferenceCtrl.value), 
         map(preference => preference === 'phone'),
         tap(showPhoneCtrl => this.setPhonevalidators(showPhoneCtrl))
         );
+    this.showEmailError$ = this.emailForm.statusChanges.pipe(
+          map(status =>status === 'INVALID' && this.emailCtrl.value && this.confirmEmailCtrl.value && this.loginInfoForm.hasError('confirmEqual'))
+        );
+    this.showPasswordError$ = this.loginInfoForm.statusChanges.pipe(
+          map(status =>status === 'INVALID' && this.passwordCtrl.value && this.confirmPasswordCtrl.value)
+        );    
   }
 
 private setEmailValidators(showEmailCtrl: boolean){
@@ -127,13 +143,12 @@ getformControlErrorText(ctrl: AbstractControl){
   if(ctrl.hasError('required')){
     return 'Ce champ est requis';
   } else if(ctrl.hasError('eamil')){
-    return 'Merci d\'entrer une adresse ail valide';
+    return 'Merci d\'entrer une adresse mail valide';
   }else if(ctrl.hasError('minlength')){
     return 'Ce numéro de téléphone ne contient pas assez de chiffres';
   }else if(ctrl.hasError('maxlength')){
     return 'Ce numéro de téléphone contient trop de chiffres';
-  }
-  else{
+  }else{
     return 'Ce champ contient une erreur';
   }
 }

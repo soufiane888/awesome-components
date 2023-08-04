@@ -23,7 +23,7 @@ ngOnInit(): void {
 }
 
 private initObservables(){
-  this.loading$ = this.candidatesService.loading$;
+  this.loading$ = this.candidatesService.loading;
   this.candidates$ = this.candidatesService.candidates$
 }    
   

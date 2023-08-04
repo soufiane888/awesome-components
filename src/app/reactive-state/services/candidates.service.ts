@@ -6,10 +6,9 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CandidatesService {
-    loading$!: Observable<boolean>;
     constructor(private http: HttpClient){}
  
- private _loading$ = new BehaviorSubject<boolean>(false)
+ private _loading$ = new BehaviorSubject<boolean>(false);
  get loading(): Observable<boolean>{
     return this._loading$.asObservable();
  }

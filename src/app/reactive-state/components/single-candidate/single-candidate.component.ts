@@ -17,9 +17,10 @@ export class SingleCandidateComponent implements OnInit{
 loading$!: Observable<boolean>;
 candidate$!: Observable<Candidate>;
 
+
 constructor(private candidatesService: CandidatesService,
   private route: ActivatedRoute,
-  private router: Router){}
+  private router: Router,){}
 
 ngOnInit(): void {
  this.initObservable();
